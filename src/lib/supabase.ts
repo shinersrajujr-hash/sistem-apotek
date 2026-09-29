@@ -4,17 +4,20 @@ import type { Database } from '@/types/database';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Supabase credentials belum dikonfigurasi. ' +
-    'Pastikan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY sudah diisi di file .env',
-  );
-}
+// Jika credentials belum diisi, buat dummy client agar app tidak crash
+// (akan masuk mode offline/localStorage fallback)
+const url = supabaseUrl || 'https://placeholder.supabase.co';
+const key = supabaseAnonKey || 'placeholder-key';
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient<Database>(url, key, {
   auth: {
-    // Aplikasi ini tidak menggunakan auth user — gunakan anon key saja
     persistSession: false,
     autoRefreshToken: false,
   },
 });
+
+export const isSupabaseConfigured =
+  !!supabaseUrl &&
+  supabaseUrl !== 'https://placeholder.supabase.co' &&
+  !!supabaseAnonKey &&
+  supabaseAnonKey !== 'placeholder-key';

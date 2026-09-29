@@ -16,6 +16,7 @@ import {
 } from '@/lib/data';
 import { generateInvoice } from '@/lib/format';
 import * as db from '@/lib/supabaseService';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 // ─── Settings ────────────────────────────────────────────────────────────────
 export interface ApotekSettings {
@@ -138,6 +139,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     async function loadFromSupabase() {
       setSyncStatus('loading');
       try {
+        // Jika Supabase belum dikonfigurasi, langsung pakai data lokal
+        if (!isSupabaseConfigured) {
+          console.info('[Apotek] Supabase belum dikonfigurasi, menggunakan data lokal.');
+          setSyncStatus('offline');
+          return;
+        }
+
         // Seed data awal ke Supabase jika tabel kosong
         await db.seedIfEmpty(suppliers, medicines, sales, stockActivities);
 
