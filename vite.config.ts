@@ -4,6 +4,8 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // base harus sesuai nama repo GitHub agar asset path benar di GitHub Pages
+  base: '/sistem-apotek/',
   plugins: [react()],
   resolve: {
     alias: {
