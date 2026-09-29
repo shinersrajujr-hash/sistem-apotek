@@ -39,17 +39,34 @@ export function formatTanggalTime(iso: string): string {
   });
 }
 
-export function getStockStatus(stok: number): 'tersedia' | 'menipis' | 'habis' {
+/**
+ * Kembalikan status stok berdasarkan threshold yang bisa dikonfigurasi.
+ * @param stok    jumlah stok saat ini
+ * @param minimum ambang batas stok menipis (default 20)
+ */
+export function getStockStatus(stok: number, minimum = 20): 'tersedia' | 'menipis' | 'habis' {
   if (stok === 0) return 'habis';
-  if (stok <= 20) return 'menipis';
+  if (stok <= minimum) return 'menipis';
   return 'tersedia';
 }
 
-export function generateInvoice(): string {
+/**
+ * Buat nomor invoice dengan prefix yang bisa dikonfigurasi.
+ * @param prefix awalan invoice (default 'INV')
+ */
+export function generateInvoice(prefix = 'INV'): string {
   const now = new Date();
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, '0');
   const d = String(now.getDate()).padStart(2, '0');
   const rand = Math.floor(1000 + Math.random() * 9000);
-  return `INV-${y}${m}${d}-${rand}`;
+  return `${prefix}-${y}${m}${d}-${rand}`;
+}
+
+/** Format tanggal ke string YYYY-MM-DD untuk value input[type=date] */
+export function toDateInput(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }

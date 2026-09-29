@@ -80,130 +80,128 @@ export const sales: Sale[] = [
   {
     id: 'TRX-001',
     invoice: 'INV-20260929-1001',
-    tanggal: '2026-09-29T08:15:00',
+    tanggal: new Date().toISOString().replace(/T.*/, 'T08:15:00'),
     items: [
       { medicineId: 'MED-001', nama: 'Paracetamol 500mg', harga: 300, qty: 20, subtotal: 6000 },
       { medicineId: 'MED-004', nama: 'Vitamin C 1000mg', harga: 1000, qty: 5, subtotal: 5000 },
     ],
     total: 11000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Tunai',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-002',
     invoice: 'INV-20260929-1002',
-    tanggal: '2026-09-29T09:30:00',
+    tanggal: new Date().toISOString().replace(/T.*/, 'T09:30:00'),
     items: [
       { medicineId: 'MED-003', nama: 'Ibuprofen 400mg', harga: 400, qty: 10, subtotal: 4000 },
       { medicineId: 'MED-013', nama: 'Cough Syrup 100ml', harga: 9000, qty: 2, subtotal: 18000 },
     ],
     total: 22000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'QRIS',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-003',
     invoice: 'INV-20260929-1003',
-    tanggal: '2026-09-29T10:45:00',
+    tanggal: new Date().toISOString().replace(/T.*/, 'T10:45:00'),
     items: [
       { medicineId: 'MED-011', nama: 'Metformin 500mg', harga: 1200, qty: 30, subtotal: 36000 },
     ],
     total: 36000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Tunai',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-004',
     invoice: 'INV-20260929-1004',
-    tanggal: '2026-09-29T11:20:00',
+    tanggal: new Date().toISOString().replace(/T.*/, 'T11:20:00'),
     items: [
       { medicineId: 'MED-010', nama: 'Loratadine 10mg', harga: 800, qty: 10, subtotal: 8000 },
       { medicineId: 'MED-002', nama: 'Amoxicillin 500mg', harga: 1500, qty: 5, subtotal: 7500 },
     ],
     total: 15500,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Debit',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-005',
     invoice: 'INV-20260928-1005',
-    tanggal: '2026-09-28T14:10:00',
+    tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().replace(/T.*/, 'T14:10:00'); })(),
     items: [
       { medicineId: 'MED-016', nama: 'Multivitamin Syrup 200ml', harga: 22000, qty: 3, subtotal: 66000 },
       { medicineId: 'MED-001', nama: 'Paracetamol 500mg', harga: 300, qty: 15, subtotal: 4500 },
     ],
     total: 70500,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'QRIS',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-006',
     invoice: 'INV-20260928-1006',
-    tanggal: '2026-09-28T16:00:00',
+    tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().replace(/T.*/, 'T16:00:00'); })(),
     items: [
       { medicineId: 'MED-014', nama: 'Povidone Iodine 10%', harga: 15000, qty: 2, subtotal: 30000 },
     ],
     total: 30000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Tunai',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-007',
     invoice: 'INV-20260927-1007',
-    tanggal: '2026-09-27T09:00:00',
+    tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 2); return d.toISOString().replace(/T.*/, 'T09:00:00'); })(),
     items: [
       { medicineId: 'MED-009', nama: 'Asam Mefenamat 500mg', harga: 350, qty: 20, subtotal: 7000 },
       { medicineId: 'MED-017', nama: 'Attapulgite 500mg', harga: 400, qty: 10, subtotal: 4000 },
     ],
     total: 11000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Tunai',
     kasir: 'Admin Apotek',
   },
   {
     id: 'TRX-008',
     invoice: 'INV-20260927-1008',
-    tanggal: '2026-09-27T13:30:00',
+    tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 2); return d.toISOString().replace(/T.*/, 'T13:30:00'); })(),
     items: [
       { medicineId: 'MED-012', nama: 'Amlodipine 5mg', harga: 1400, qty: 30, subtotal: 42000 },
       { medicineId: 'MED-018', nama: 'Bisoprolol 5mg', harga: 1800, qty: 10, subtotal: 18000 },
     ],
     total: 60000,
+    pajakPersen: 0,
+    pajakAmount: 0,
     metodePembayaran: 'Debit',
     kasir: 'Admin Apotek',
   },
 ];
 
 export const stockActivities: StockActivity[] = [
-  { id: 'STK-001', tanggal: '2026-09-29T07:00:00', medicineId: 'MED-001', namaObat: 'Paracetamol 500mg', jenis: 'masuk', jumlah: 200, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
-  { id: 'STK-002', tanggal: '2026-09-29T08:15:00', medicineId: 'MED-001', namaObat: 'Paracetamol 500mg', jenis: 'keluar', jumlah: 20, keterangan: 'Penjualan INV-20260929-1001', user: 'Admin Apotek' },
-  { id: 'STK-003', tanggal: '2026-09-29T09:30:00', medicineId: 'MED-013', namaObat: 'Cough Syrup 100ml', jenis: 'keluar', jumlah: 2, keterangan: 'Penjualan INV-20260929-1002', user: 'Admin Apotek' },
-  { id: 'STK-004', tanggal: '2026-09-28T10:00:00', medicineId: 'MED-016', namaObat: 'Multivitamin Syrup 200ml', jenis: 'masuk', jumlah: 50, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
-  { id: 'STK-005', tanggal: '2026-09-28T11:00:00', medicineId: 'MED-006', namaObat: 'Omeprazole 20mg', jenis: 'penyesuaian', jumlah: -5, keterangan: 'Stok rusak/expired', user: 'Admin Apotek' },
-  { id: 'STK-006', tanggal: '2026-09-28T14:10:00', medicineId: 'MED-016', namaObat: 'Multivitamin Syrup 200ml', jenis: 'keluar', jumlah: 3, keterangan: 'Penjualan INV-20260928-1005', user: 'Admin Apotek' },
-  { id: 'STK-007', tanggal: '2026-09-27T08:00:00', medicineId: 'MED-011', namaObat: 'Metformin 500mg', jenis: 'masuk', jumlah: 100, keterangan: 'Pembelian dari PT Dexa Medica', user: 'Admin Apotek' },
-  { id: 'STK-008', tanggal: '2026-09-27T13:30:00', medicineId: 'MED-012', namaObat: 'Amlodipine 5mg', jenis: 'keluar', jumlah: 30, keterangan: 'Penjualan INV-20260927-1008', user: 'Admin Apotek' },
-  { id: 'STK-009', tanggal: '2026-09-26T09:00:00', medicineId: 'MED-004', namaObat: 'Vitamin C 1000mg', jenis: 'penyesuaian', jumlah: -3, keterangan: 'Koreksi stok opname', user: 'Admin Apotek' },
-  { id: 'STK-010', tanggal: '2026-09-26T14:00:00', medicineId: 'MED-015', namaObat: 'Hydrocortisone Cream 1%', jenis: 'penyesuaian', jumlah: -10, keterangan: 'Produk expired', user: 'Admin Apotek' },
-  { id: 'STK-011', tanggal: '2026-09-25T10:00:00', medicineId: 'MED-005', namaObat: 'Cetirizine 10mg', jenis: 'masuk', jumlah: 75, keterangan: 'Pembelian dari PT Kalbe Farma', user: 'Admin Apotek' },
-  { id: 'STK-012', tanggal: '2026-09-25T15:00:00', medicineId: 'MED-020', namaObat: 'Ibuprofen Syrup 100ml', jenis: 'masuk', jumlah: 22, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
-];
-
-export const revenueLast7Days = [
-  { tanggal: '23 Sep', pendapatan: 185000 },
-  { tanggal: '24 Sep', pendapatan: 220000 },
-  { tanggal: '25 Sep', pendapatan: 195000 },
-  { tanggal: '26 Sep', pendapatan: 310000 },
-  { tanggal: '27 Sep', pendapatan: 71000 },
-  { tanggal: '28 Sep', pendapatan: 100500 },
-  { tanggal: '29 Sep', pendapatan: 84500 },
-];
-
-export const topMedicines = [
-  { nama: 'Paracetamol 500mg', terjual: 350, pendapatan: 105000 },
-  { nama: 'Metformin 500mg', terjual: 120, pendapatan: 144000 },
-  { nama: 'Amoxicillin 500mg', terjual: 85, pendapatan: 127500 },
-  { nama: 'Vitamin C 1000mg', terjual: 100, pendapatan: 100000 },
-  { nama: 'Amlodipine 5mg', terjual: 60, pendapatan: 84000 },
+  { id: 'STK-001', tanggal: (() => { const d = new Date(); return d.toISOString().replace(/T.*/, 'T07:00:00'); })(), medicineId: 'MED-001', namaObat: 'Paracetamol 500mg', jenis: 'masuk', jumlah: 200, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
+  { id: 'STK-002', tanggal: (() => { const d = new Date(); return d.toISOString().replace(/T.*/, 'T08:15:00'); })(), medicineId: 'MED-001', namaObat: 'Paracetamol 500mg', jenis: 'keluar', jumlah: 20, keterangan: 'Penjualan INV-20260929-1001', user: 'Admin Apotek' },
+  { id: 'STK-003', tanggal: (() => { const d = new Date(); return d.toISOString().replace(/T.*/, 'T09:30:00'); })(), medicineId: 'MED-013', namaObat: 'Cough Syrup 100ml', jenis: 'keluar', jumlah: 2, keterangan: 'Penjualan INV-20260929-1002', user: 'Admin Apotek' },
+  { id: 'STK-004', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().replace(/T.*/, 'T10:00:00'); })(), medicineId: 'MED-016', namaObat: 'Multivitamin Syrup 200ml', jenis: 'masuk', jumlah: 50, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
+  { id: 'STK-005', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().replace(/T.*/, 'T11:00:00'); })(), medicineId: 'MED-006', namaObat: 'Omeprazole 20mg', jenis: 'penyesuaian', jumlah: -5, keterangan: 'Stok rusak/expired', user: 'Admin Apotek' },
+  { id: 'STK-006', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().replace(/T.*/, 'T14:10:00'); })(), medicineId: 'MED-016', namaObat: 'Multivitamin Syrup 200ml', jenis: 'keluar', jumlah: 3, keterangan: 'Penjualan INV-20260928-1005', user: 'Admin Apotek' },
+  { id: 'STK-007', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 2); return d.toISOString().replace(/T.*/, 'T08:00:00'); })(), medicineId: 'MED-011', namaObat: 'Metformin 500mg', jenis: 'masuk', jumlah: 100, keterangan: 'Pembelian dari PT Dexa Medica', user: 'Admin Apotek' },
+  { id: 'STK-008', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 2); return d.toISOString().replace(/T.*/, 'T13:30:00'); })(), medicineId: 'MED-012', namaObat: 'Amlodipine 5mg', jenis: 'keluar', jumlah: 30, keterangan: 'Penjualan INV-20260927-1008', user: 'Admin Apotek' },
+  { id: 'STK-009', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 3); return d.toISOString().replace(/T.*/, 'T09:00:00'); })(), medicineId: 'MED-004', namaObat: 'Vitamin C 1000mg', jenis: 'penyesuaian', jumlah: -3, keterangan: 'Koreksi stok opname', user: 'Admin Apotek' },
+  { id: 'STK-010', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 3); return d.toISOString().replace(/T.*/, 'T14:00:00'); })(), medicineId: 'MED-015', namaObat: 'Hydrocortisone Cream 1%', jenis: 'penyesuaian', jumlah: -10, keterangan: 'Produk expired', user: 'Admin Apotek' },
+  { id: 'STK-011', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 4); return d.toISOString().replace(/T.*/, 'T10:00:00'); })(), medicineId: 'MED-005', namaObat: 'Cetirizine 10mg', jenis: 'masuk', jumlah: 75, keterangan: 'Pembelian dari PT Kalbe Farma', user: 'Admin Apotek' },
+  { id: 'STK-012', tanggal: (() => { const d = new Date(); d.setDate(d.getDate() - 4); return d.toISOString().replace(/T.*/, 'T15:00:00'); })(), medicineId: 'MED-020', namaObat: 'Ibuprofen Syrup 100ml', jenis: 'masuk', jumlah: 22, keterangan: 'Pembelian dari PT Kimia Farma', user: 'Admin Apotek' },
 ];
 
 export const medicineCategories = [
@@ -222,3 +220,47 @@ export const medicineCategories = [
 ];
 
 export const paymentMethods = ['Tunai', 'QRIS', 'Debit', 'Kredit'];
+
+/**
+ * Hitung pendapatan 7 hari terakhir dari data penjualan.
+ * Mengembalikan array {tanggal, pendapatan} yang cocok untuk RevenueChart.
+ */
+export function computeRevenueLast7Days(salesData: Sale[]): { tanggal: string; pendapatan: number }[] {
+  const result: { tanggal: string; pendapatan: number }[] = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toDateString();
+    const pendapatan = salesData
+      .filter((s) => new Date(s.tanggal).toDateString() === dateStr)
+      .reduce((sum, s) => sum + s.total, 0);
+    const tanggal = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    result.push({ tanggal, pendapatan });
+  }
+  return result;
+}
+
+/**
+ * Hitung obat terlaris dari data penjualan.
+ * Mengembalikan top-N medicine berdasarkan qty terjual.
+ */
+export function computeTopMedicines(
+  salesData: Sale[],
+  n = 5,
+): { nama: string; terjual: number; pendapatan: number }[] {
+  const map: Record<string, { terjual: number; pendapatan: number }> = {};
+  salesData.forEach((sale) => {
+    sale.items.forEach((item) => {
+      if (!map[item.nama]) {
+        map[item.nama] = { terjual: 0, pendapatan: 0 };
+      }
+      map[item.nama].terjual += item.qty;
+      map[item.nama].pendapatan += item.subtotal;
+    });
+  });
+  return Object.entries(map)
+    .map(([nama, v]) => ({ nama, ...v }))
+    .sort((a, b) => b.terjual - a.terjual)
+    .slice(0, n);
+}

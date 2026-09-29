@@ -26,6 +26,10 @@ export interface Sale {
   tanggal: string;
   items: SaleItem[];
   total: number;
+  /** Persentase pajak saat transaksi dilakukan (bisa 0) */
+  pajakPersen: number;
+  /** Nilai nominal pajak */
+  pajakAmount: number;
   metodePembayaran: string;
   kasir: string;
 }
@@ -49,6 +53,7 @@ export interface Supplier {
   kontak: string;
   telepon: string;
   alamat: string;
+  /** Dihitung otomatis dari data medicines — field ini hanya untuk tampilan legacy */
   jumlahObat: number;
   totalPembelian: number;
   status: 'aktif' | 'nonaktif';

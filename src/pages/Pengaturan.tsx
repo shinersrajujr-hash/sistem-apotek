@@ -1,38 +1,23 @@
 import { useState } from 'react';
-import { Store, User, CreditCard, Settings, Check, Save } from 'lucide-react';
+import { Store, User, CreditCard, Settings, Save, Check } from 'lucide-react';
 import { useToast } from '@/components/Toast';
-import { paymentMethods } from '@/lib/data';
+import { useApp } from '@/store/AppContext';
+import { paymentMethods as allPaymentMethods } from '@/lib/data';
+import type { ApotekSettings } from '@/store/AppContext';
 
 type Tab = 'apotek' | 'admin' | 'transaksi' | 'pembayaran';
 
 export default function Pengaturan() {
+  const { settings, updateSettings } = useApp();
   const { showToast } = useToast();
 
   const [tab, setTab] = useState<Tab>('apotek');
-  const [enabledPayments, setEnabledPayments] = useState<string[]>(['Tunai', 'QRIS']);
 
-  const [apotekData, setApotekData] = useState({
-    nama: 'Apotek Sehat Sentosa',
-    alamat: 'Jl. Merdeka No. 123, Jakarta Pusat',
-    telepon: '021-555-1234',
-    email: 'info@apoteksehat.co.id',
-    jamOperasional: '08:00 - 22:00',
-    nomorIzin: 'SIIPA-123456789',
-  });
-
-  const [adminData, setAdminData] = useState({
-    nama: 'Admin Apotek',
-    email: 'admin@apoteksehat.co.id',
-    telepon: '0812-3456-7890',
-    role: 'Administrator',
-  });
-
-  const [transaksiData, setTransaksiData] = useState({
-    pajakPersen: 0,
-    prefixInvoice: 'INV',
-    stokMinimum: 20,
-    cetakOtomatis: true,
-  });
+  // Local draft state — hanya disimpan ke context saat klik "Simpan"
+  const [apotekData, setApotekData] = useState({ ...settings.apotek });
+  const [adminData, setAdminData] = useState({ ...settings.admin });
+  const [transaksiData, setTransaksiData] = useState({ ...settings.transaksi });
+  const [enabledPayments, setEnabledPayments] = useState<string[]>([...settings.enabledPayments]);
 
   const tabs: { key: Tab; label: string; icon: typeof Store }[] = [
     { key: 'apotek', label: 'Profil Apotek', icon: Store },
@@ -42,14 +27,32 @@ export default function Pengaturan() {
   ];
 
   function save() {
+    if (enabledPayments.length === 0) {
+      showToast('Minimal satu metode pembayaran harus aktif', 'error');
+      return;
+    }
+    const patch: Partial<ApotekSettings> = {
+      apotek: apotekData,
+      admin: adminData,
+      transaksi: transaksiData,
+      enabledPayments,
+    };
+    updateSettings(patch);
     showToast('Pengaturan berhasil disimpan');
   }
 
   function togglePayment(method: string) {
     setEnabledPayments((prev) =>
-      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method]
+      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method],
     );
   }
+
+  // Tampilkan inisial nama admin
+  const initials = adminData.nama
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fadeIn">
@@ -75,6 +78,8 @@ export default function Pengaturan() {
       {/* Content */}
       <div className="lg:col-span-3">
         <div className="card p-6">
+
+          {/* ── Profil Apotek ────────────────────────────────── */}
           {tab === 'apotek' && (
             <div className="space-y-5">
               <div>
@@ -84,32 +89,62 @@ export default function Pengaturan() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
                   <label className="label">Nama Apotek</label>
-                  <input className="input" value={apotekData.nama} onChange={(e) => setApotekData({ ...apotekData, nama: e.target.value })} />
+                  <input
+                    className="input"
+                    value={apotekData.nama}
+                    onChange={(e) => setApotekData({ ...apotekData, nama: e.target.value })}
+                  />
                 </div>
                 <div className="sm:col-span-2">
                   <label className="label">Alamat</label>
-                  <textarea className="input min-h-[70px] resize-none" value={apotekData.alamat} onChange={(e) => setApotekData({ ...apotekData, alamat: e.target.value })} />
+                  <textarea
+                    className="input min-h-[70px] resize-none"
+                    value={apotekData.alamat}
+                    onChange={(e) => setApotekData({ ...apotekData, alamat: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Telepon</label>
-                  <input className="input" value={apotekData.telepon} onChange={(e) => setApotekData({ ...apotekData, telepon: e.target.value })} />
+                  <input
+                    className="input"
+                    value={apotekData.telepon}
+                    onChange={(e) => setApotekData({ ...apotekData, telepon: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Email</label>
-                  <input className="input" value={apotekData.email} onChange={(e) => setApotekData({ ...apotekData, email: e.target.value })} />
+                  <input
+                    className="input"
+                    type="email"
+                    value={apotekData.email}
+                    onChange={(e) => setApotekData({ ...apotekData, email: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Jam Operasional</label>
-                  <input className="input" value={apotekData.jamOperasional} onChange={(e) => setApotekData({ ...apotekData, jamOperasional: e.target.value })} />
+                  <input
+                    className="input"
+                    value={apotekData.jamOperasional}
+                    onChange={(e) =>
+                      setApotekData({ ...apotekData, jamOperasional: e.target.value })
+                    }
+                  />
                 </div>
                 <div>
                   <label className="label">Nomor Izin Apotek</label>
-                  <input className="input" value={apotekData.nomorIzin} onChange={(e) => setApotekData({ ...apotekData, nomorIzin: e.target.value })} />
+                  <input
+                    className="input"
+                    value={apotekData.nomorIzin}
+                    onChange={(e) =>
+                      setApotekData({ ...apotekData, nomorIzin: e.target.value })
+                    }
+                  />
                 </div>
               </div>
             </div>
           )}
 
+          {/* ── Data Admin ───────────────────────────────────── */}
           {tab === 'admin' && (
             <div className="space-y-5">
               <div>
@@ -118,25 +153,39 @@ export default function Pengaturan() {
               </div>
               <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-teal-50 to-teal-100/30 rounded-xl">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center text-white font-bold text-xl">
-                  AA
+                  {initials || 'A'}
                 </div>
                 <div>
                   <p className="font-bold text-gray-900">{adminData.nama}</p>
                   <p className="text-sm text-gray-500">{adminData.role}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{adminData.email}</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="label">Nama Lengkap</label>
-                  <input className="input" value={adminData.nama} onChange={(e) => setAdminData({ ...adminData, nama: e.target.value })} />
+                  <input
+                    className="input"
+                    value={adminData.nama}
+                    onChange={(e) => setAdminData({ ...adminData, nama: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Email</label>
-                  <input className="input" value={adminData.email} onChange={(e) => setAdminData({ ...adminData, email: e.target.value })} />
+                  <input
+                    className="input"
+                    type="email"
+                    value={adminData.email}
+                    onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Telepon</label>
-                  <input className="input" value={adminData.telepon} onChange={(e) => setAdminData({ ...adminData, telepon: e.target.value })} />
+                  <input
+                    className="input"
+                    value={adminData.telepon}
+                    onChange={(e) => setAdminData({ ...adminData, telepon: e.target.value })}
+                  />
                 </div>
                 <div>
                   <label className="label">Role</label>
@@ -146,71 +195,145 @@ export default function Pengaturan() {
             </div>
           )}
 
+          {/* ── Transaksi ────────────────────────────────────── */}
           {tab === 'transaksi' && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-gray-900 text-lg">Pengaturan Transaksi</h3>
-                <p className="text-sm text-gray-400 mt-1">Konfigurasi default untuk transaksi penjualan</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Konfigurasi default untuk transaksi penjualan
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="label">Pajak (%)</label>
-                  <input type="number" className="input" value={transaksiData.pajakPersen} onChange={(e) => setTransaksiData({ ...transaksiData, pajakPersen: Number(e.target.value) })} />
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    className="input"
+                    value={transaksiData.pajakPersen}
+                    onChange={(e) =>
+                      setTransaksiData({ ...transaksiData, pajakPersen: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Diterapkan otomatis pada setiap transaksi baru
+                  </p>
                 </div>
                 <div>
                   <label className="label">Prefix Invoice</label>
-                  <input className="input" value={transaksiData.prefixInvoice} onChange={(e) => setTransaksiData({ ...transaksiData, prefixInvoice: e.target.value })} />
+                  <input
+                    className="input"
+                    value={transaksiData.prefixInvoice}
+                    onChange={(e) =>
+                      setTransaksiData({ ...transaksiData, prefixInvoice: e.target.value })
+                    }
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Contoh: INV → INV-20261001-1234
+                  </p>
                 </div>
                 <div>
-                  <label className="label">Stok Minimum</label>
-                  <input type="number" className="input" value={transaksiData.stokMinimum} onChange={(e) => setTransaksiData({ ...transaksiData, stokMinimum: Number(e.target.value) })} />
+                  <label className="label">Stok Minimum (unit)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    className="input"
+                    value={transaksiData.stokMinimum}
+                    onChange={(e) =>
+                      setTransaksiData({
+                        ...transaksiData,
+                        stokMinimum: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Obat dengan stok ≤ nilai ini dianggap "menipis"
+                  </p>
                 </div>
                 <div className="flex items-end">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <button
                       type="button"
-                      onClick={() => setTransaksiData({ ...transaksiData, cetakOtomatis: !transaksiData.cetakOtomatis })}
-                      className={`relative w-11 h-6 rounded-full transition-colors ${transaksiData.cetakOtomatis ? 'bg-teal-600' : 'bg-gray-200'}`}
+                      onClick={() =>
+                        setTransaksiData({
+                          ...transaksiData,
+                          cetakOtomatis: !transaksiData.cetakOtomatis,
+                        })
+                      }
+                      className={`relative w-11 h-6 rounded-full transition-colors ${
+                        transaksiData.cetakOtomatis ? 'bg-teal-600' : 'bg-gray-200'
+                      }`}
                     >
-                      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${transaksiData.cetakOtomatis ? 'translate-x-5' : ''}`} />
+                      <span
+                        className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                          transaksiData.cetakOtomatis ? 'translate-x-5' : ''
+                        }`}
+                      />
                     </button>
-                    <span className="text-sm font-medium text-gray-700">Cetak struk otomatis</span>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Cetak struk otomatis</span>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Langsung cetak setelah transaksi selesai
+                      </p>
+                    </div>
                   </label>
                 </div>
               </div>
             </div>
           )}
 
+          {/* ── Metode Pembayaran ────────────────────────────── */}
           {tab === 'pembayaran' && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-gray-900 text-lg">Metode Pembayaran</h3>
-                <p className="text-sm text-gray-400 mt-1">Pilih metode pembayaran yang tersedia</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Pilih metode pembayaran yang tersedia di kasir
+                </p>
               </div>
               <div className="space-y-3">
-                {paymentMethods.map((m) => {
+                {allPaymentMethods.map((m) => {
                   const enabled = enabledPayments.includes(m);
                   return (
-                    <div key={m} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
+                    <div
+                      key={m}
+                      className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${enabled ? 'bg-teal-50 text-teal-600' : 'bg-gray-50 text-gray-400'}`}>
+                        <div
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            enabled ? 'bg-teal-50 text-teal-600' : 'bg-gray-50 text-gray-400'
+                          }`}
+                        >
                           <CreditCard className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-900">{m}</p>
-                          <p className="text-xs text-gray-400">{enabled ? 'Aktif' : 'Nonaktif'}</p>
+                          <p className="text-xs text-gray-400">{enabled ? 'Aktif di kasir' : 'Nonaktif'}</p>
                         </div>
                       </div>
                       <button
                         onClick={() => togglePayment(m)}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${enabled ? 'bg-teal-600' : 'bg-gray-200'}`}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${
+                          enabled ? 'bg-teal-600' : 'bg-gray-200'
+                        }`}
+                        aria-label={`Toggle ${m}`}
                       >
-                        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${enabled ? 'translate-x-5' : ''}`} />
+                        <span
+                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                            enabled ? 'translate-x-5' : ''
+                          }`}
+                        />
                       </button>
                     </div>
                   );
                 })}
               </div>
+              <p className="text-xs text-gray-400 bg-gray-50 p-3 rounded-lg">
+                Metode yang diaktifkan akan muncul sebagai pilihan di halaman Penjualan
+              </p>
             </div>
           )}
 
