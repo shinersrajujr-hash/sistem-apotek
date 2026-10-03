@@ -2,9 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  // base harus sesuai nama repo GitHub agar asset path benar di GitHub Pages
+  // base sesuai nama repo GitHub Pages
   base: '/sistem-apotek/',
   plugins: [react()],
   resolve: {
@@ -14,5 +13,20 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
+  },
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        // JS bundle → script.js
+        entryFileNames: 'script.js',
+        chunkFileNames: 'script.js',
+        // CSS bundle → style.css
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) return 'style.css';
+          return assetInfo.name ?? 'asset';
+        },
+      },
+    },
   },
 });
