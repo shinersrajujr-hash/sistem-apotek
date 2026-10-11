@@ -1,11 +1,10 @@
 ﻿-- ============================================================
---  SISTEM APOTEK ΓÇö Supabase Schema
---  Jalankan seluruh script ini di SQL Editor Supabase
+--  SISTEM APOTEK ΓÇö Schema (Definisi Tabel & Index)
+--  Jalankan file ini PERTAMA di SQL Editor Supabase
 --  Dashboard ΓåÆ SQL Editor ΓåÆ New query ΓåÆ paste ΓåÆ Run
 -- ============================================================
 
 -- ΓöÇΓöÇΓöÇ Extensions ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
--- uuid_generate_v4() untuk primary key otomatis
 create extension if not exists "uuid-ossp";
 
 -- ΓöÇΓöÇΓöÇ Tabel: suppliers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
@@ -81,31 +80,6 @@ create table if not exists public.settings (
   updated_at  timestamptz not null default now()
 );
 
--- Pastikan hanya ada satu baris
-insert into public.settings (id, data) values (1, '{}')
-  on conflict (id) do nothing;
-
--- ΓöÇΓöÇΓöÇ Trigger: updated_at otomatis ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
-create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$;
-
-create or replace trigger trg_suppliers_updated_at
-  before update on public.suppliers
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_medicines_updated_at
-  before update on public.medicines
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_settings_updated_at
-  before update on public.settings
-  for each row execute function public.set_updated_at();
-
 -- ΓöÇΓöÇΓöÇ Index untuk performa query ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 create index if not exists idx_medicines_supplier on public.medicines(supplier_id);
 create index if not exists idx_medicines_kategori on public.medicines(kategori);
@@ -116,17 +90,12 @@ create index if not exists idx_sales_tanggal      on public.sales(tanggal desc);
 create index if not exists idx_stock_tanggal      on public.stock_activities(tanggal desc);
 
 -- ΓöÇΓöÇΓöÇ Row Level Security (RLS) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
--- Aktifkan RLS di semua tabel
 alter table public.suppliers        enable row level security;
 alter table public.medicines        enable row level security;
 alter table public.sales            enable row level security;
 alter table public.sale_items       enable row level security;
 alter table public.stock_activities enable row level security;
 alter table public.settings         enable row level security;
-
--- Policy: izinkan anon key untuk SELECT, INSERT, UPDATE, DELETE
--- (Aplikasi ini belum memiliki auth user ΓÇö gunakan anon access penuh)
--- Sesuaikan policy ini jika nanti menambahkan auth.
 
 create policy "anon_select_suppliers"   on public.suppliers        for select using (true);
 create policy "anon_insert_suppliers"   on public.suppliers        for insert with check (true);
