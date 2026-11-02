@@ -66,4 +66,5 @@ export type PageKey =
   | 'stok'
   | 'supplier'
   | 'laporan'
+  | 'buku-besar'
   | 'pengaturan';

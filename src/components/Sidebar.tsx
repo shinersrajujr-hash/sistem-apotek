@@ -1,6 +1,6 @@
 import {
   BarChart3, ShoppingCart, Pill, Boxes, Truck,
-  FileText, Settings, X, Stethoscope, AlertTriangle,
+  FileText, Settings, X, Stethoscope, AlertTriangle, BookOpen,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
 import { getStockStatus } from '@/lib/format';
@@ -20,6 +20,7 @@ const navItems: { key: PageKey; label: string; icon: typeof BarChart3 }[] = [
   { key: 'stok', label: 'Stok', icon: Boxes },
   { key: 'supplier', label: 'Supplier', icon: Truck },
   { key: 'laporan', label: 'Laporan', icon: FileText },
+  { key: 'buku-besar', label: 'Buku Besar', icon: BookOpen },
   { key: 'pengaturan', label: 'Pengaturan', icon: Settings },
 ];
 

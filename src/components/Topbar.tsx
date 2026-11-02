@@ -11,6 +11,7 @@ const pageTitles: Record<PageKey, { title: string; subtitle: string }> = {
   stok: { title: 'Stok', subtitle: 'Pantau pergerakan stok obat' },
   supplier: { title: 'Supplier', subtitle: 'Kelola data supplier dan distribusi' },
   laporan: { title: 'Laporan', subtitle: 'Analisis pendapatan dan penjualan' },
+  'buku-besar': { title: 'Buku Besar', subtitle: 'Pencatatan akuntansi dan jurnal keuangan' },
   pengaturan: { title: 'Pengaturan', subtitle: 'Konfigurasi profil dan sistem' },
 };
 

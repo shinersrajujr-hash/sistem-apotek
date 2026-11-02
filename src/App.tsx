@@ -9,6 +9,7 @@ import Obat from '@/pages/Obat';
 import Stok from '@/pages/Stok';
 import Supplier from '@/pages/Supplier';
 import Laporan from '@/pages/Laporan';
+import BukuBesar from '@/pages/BukuBesar';
 import Pengaturan from '@/pages/Pengaturan';
 import type { PageKey } from '@/types';
 
@@ -39,6 +40,7 @@ function AppContent() {
           {page === 'stok' && <Stok />}
           {page === 'supplier' && <Supplier />}
           {page === 'laporan' && <Laporan />}
+          {page === 'buku-besar' && <BukuBesar />}
           {page === 'pengaturan' && <Pengaturan />}
         </main>
       </div>
